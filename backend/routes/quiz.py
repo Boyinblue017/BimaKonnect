@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from services.recommendation_service import recommend_insurance
+from services.recommendation_servce import recommend_insurance
 
 quiz_bp = Blueprint("quiz", __name__)
 

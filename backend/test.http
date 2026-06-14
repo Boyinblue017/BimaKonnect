@@ -1,0 +1,22 @@
+GET http://127.0.0.1:5000/
+###
+POST http://127.0.0.1:5000/chat
+Content-Type: application/json
+
+{
+  "question": "motor insurance"
+}
+###
+POST http://127.0.0.1:5000/chat
+Content-Type: application/json
+
+{
+  "question": "life insurance"
+}
+###
+POST http://127.0.0.1:5000/chat
+Content-Type: application/json
+
+{
+  "question": "pet insurance"
+}
