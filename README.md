@@ -143,21 +143,26 @@ bimakonnect/
 ├── backend/
 │   ├── app.py
 │   ├── routes/
+│   │   ├── chat.py
+│   │   ├── quiz.py
+│   │   └── glossary.py
+│   │
 │   ├── services/
-│   ├── models/
-│   └── data/
+│   │   ├── knowledge_service.py
+│   │   └── recommendation_service.py
+│   │
+│   ├── data/
+│   │   └── insurance_data.json
+│   │
+│   └── requirements.txt
 │
 ├── frontend/
 │   ├── index.html
-│   ├── css/
-│   ├── js/
-│   └── assets/
+│   ├── style.css
+│   └── app.js
 │
-├── docs/
-├── tests/
-├── requirements.txt
-├── README.md
-└── .gitignore
+└── README.md
+
 ```
 
 ---
