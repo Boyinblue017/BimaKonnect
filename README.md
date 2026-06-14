@@ -62,7 +62,7 @@ Recommendations may include:
 
 ---
 
-### 📚 Insurance Glossary
+### Insurance Glossary
 
 A searchable dictionary that explains common insurance terms such as:
 
