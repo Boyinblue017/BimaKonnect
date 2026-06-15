@@ -20,3 +20,13 @@ Content-Type: application/json
 {
   "question": "pet insurance"
 }
+###
+POST http://127.0.0.1:5000/recommend
+Content-Type: application/json
+
+{
+    "vehicle": true,
+    "farmer": false,
+    "business": true,
+    "dependents": true
+}
