@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Simple, practical insurance education for everyday life.">
+  <title>BimaKonnect | Understand insurance, simply</title>
+  <link rel="stylesheet" href="mvp.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <a class="brand" href="#top" aria-label="BimaKonnect home"><span>✦</span> BimaKonnect</a>
+      <p class="eyebrow">Insurance, made understandable</p>
+      <h1>Make confident choices<br>about your protection.</h1>
+      <p class="hero-copy">Clear, practical insurance education for people, families, farmers and small businesses.</p>
+      <div class="trust-row"><span>Plain language</span><span>Free to explore</span><span>Built for everyday life</span></div>
+    </header>
+
+    <section class="panel chat-panel" aria-labelledby="assistant-title">
+      <div class="section-heading"><div><p class="eyebrow">Ask Bima</p><h2 id="assistant-title">Your insurance guide</h2></div><span class="online"><i></i> Available now</span></div>
+      <div id="chatBox" class="chat-box" aria-live="polite">
+        <article class="message assistant-message"><strong>Bima</strong><p>Hi! I can explain insurance in simple terms. Ask me about health, motor, life, crop, or business insurance.</p></article>
+      </div>
+      <div class="quick-questions" aria-label="Suggested questions">
+        <button type="button" data-question="What is health insurance?">Health cover</button>
+        <button type="button" data-question="What is motor insurance?">Motor cover</button>
+        <button type="button" data-question="What is a premium?">What is a premium?</button>
+      </div>
+      <form id="chatForm" class="chat-input">
+        <label class="sr-only" for="question">Ask an insurance question</label>
+        <input type="text" id="question" maxlength="500" placeholder="Type your question…" autocomplete="off">
+        <button id="askBtn" type="submit">Ask Bima <span>→</span></button>
+      </form>
+      <p class="disclaimer">Education only. Always check the policy wording and speak to a licensed insurer or agent before buying cover.</p>
+    </section>
+
+    <section class="two-up" aria-label="Insurance tools">
+      <article class="panel tool-panel" id="quiz">
+        <p class="eyebrow">2-minute guide</p><h2>Find cover worth exploring</h2>
+        <p class="muted">Select what applies to you. We’ll suggest useful starting points—not a quote.</p>
+        <form id="quizForm" class="quiz-options">
+          <label><input type="checkbox" id="health"><span><b>My health matters most</b><small>I want help managing medical costs</small></span></label>
+          <label><input type="checkbox" id="vehicle"><span><b>I own or use a vehicle</b><small>I face road and third-party risks</small></span></label>
+          <label><input type="checkbox" id="farmer"><span><b>I farm for income</b><small>Weather can affect my harvest</small></span></label>
+          <label><input type="checkbox" id="business"><span><b>I run a business</b><small>I have stock, equipment, or customers</small></span></label>
+          <label><input type="checkbox" id="dependents"><span><b>People depend on my income</b><small>I help support a family</small></span></label>
+          <button id="recommendBtn" type="submit">See my guide</button>
+        </form>
+        <div id="recommendations" class="recommendations" aria-live="polite"></div>
+      </article>
+
+      <article class="panel tool-panel glossary-panel" id="glossary">
+        <p class="eyebrow">Simple dictionary</p><h2>Insurance words, explained</h2>
+        <label class="sr-only" for="glossarySearch">Search the glossary</label>
+        <input type="search" id="glossarySearch" placeholder="Search premium, claim, policy…">
+        <div id="glossaryResults" class="glossary-results" aria-live="polite"></div>
+      </article>
+    </section>
+    <footer>© 2026 BimaKonnect · Understanding comes before choosing.</footer>
+  </main>
+  <script src="mvp.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+"""BimaKonnect application package."""

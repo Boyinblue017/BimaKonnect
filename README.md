@@ -169,13 +169,37 @@ bimakonnect/
 
 ## Minimum Viable Product (MVP)
 
-The MVP will include:
+The current MVP includes:
 
-* Insurance chatbot
-* Insurance recommendation quiz
-* Insurance glossary
-* SMS integration
-* Basic responsive web interface
+* A responsive, single-page web experience served by Flask.
+* A plain-language assistant for health, motor, life, crop, and small-business insurance, including simple Swahili prompts.
+* A transparent needs quiz that explains why each cover is worth exploring.
+* A searchable insurance glossary with everyday examples.
+* A health endpoint suitable for deployment monitoring.
+
+The assistant is educational by design: it does not generate policy quotes, determine eligibility, or replace a licensed insurance professional.
+
+## Run locally
+
+From the project root, activate the included virtual environment (or create your own), then run:
+
+```bash
+pip install -r backend/requirements.txt
+python -m backend.app
+```
+
+Open [http://localhost:5000](http://localhost:5000). The API health check is available at `/api/health`.
+
+## Deployment
+
+The included `render.yaml` deploys the app to Render with `gunicorn backend.app:app`. Set the repository root as the service root; Render will install `backend/requirements.txt` and monitor `/api/health`.
+
+## Recommended next milestones
+
+1. Add a verified product catalogue from participating insurers, with country-specific wording and effective dates.
+2. Integrate Africa's Talking SMS/USSD after credentials, a callback URL, and the desired menu flow are defined.
+3. Add human handoff and consent-based analytics; do not collect sensitive health or financial details in the chat.
+4. Have licensed local insurance partners review all educational content before a public launch.
 
 ---
 

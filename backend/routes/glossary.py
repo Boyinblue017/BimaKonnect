@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from services.glossary_service import get_glossary_term, get_all_glossary_terms, search_glossary_terms
+from backend.services.glossary_service import get_glossary_term, get_all_glossary_terms, search_glossary_terms
 
 glossary_bp = Blueprint("glossary", __name__)
 
@@ -18,14 +18,14 @@ def get_glossary():
 def get_term(term):
     """Get a specific glossary term"""
     result = get_glossary_term(term.lower())
-    return jsonify(result)
+    return jsonify(result), 200 if "data" in result else 404
 
 
 @glossary_bp.route("/glossary/search", methods=["POST"])
 def search_glossary():
     """Search for glossary terms"""
-    data = request.get_json()
-    query = data.get("query", "").lower()
+    data = request.get_json(silent=True) or {}
+    query = str(data.get("query", "")).strip().lower()
     
     if not query:
         return jsonify({
