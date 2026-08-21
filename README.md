@@ -185,7 +185,7 @@ The assistant is educational by design: it does not generate policy quotes, dete
 From the project root, activate the included virtual environment (or create your own), then run either command:
 
 ```bash
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 python -m backend.app
 # or
 python backend/app.py
