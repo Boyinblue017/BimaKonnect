@@ -180,6 +180,12 @@ The current MVP includes:
 
 The assistant is educational by design: it does not generate policy quotes, determine eligibility, or replace a licensed insurance professional.
 
+## Privacy
+
+BimaKonnect's current MVP does not create accounts or store submitted chat questions, quiz answers, or claims-guide selections in an application database. Users should not submit sensitive personal, medical, financial, policy, or identity information. Read the full [Privacy Policy](frontend/privacy.html) before using or deploying the service.
+
+Before public launch, replace the placeholder privacy contact in the policy, identify the production hosting provider, and obtain a legal review for each country where BimaKonnect operates. The policy is not legal advice.
+
 ## Run locally
 
 From the project root, activate the included virtual environment (or create your own), then run either command:

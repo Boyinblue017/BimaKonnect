@@ -11,6 +11,9 @@ class BimaKonnectMvpTests(unittest.TestCase):
         home = self.client.get("/")
         self.assertEqual(home.status_code, 200)
         home.close()
+        privacy = self.client.get("/privacy.html")
+        self.assertEqual(privacy.status_code, 200)
+        privacy.close()
         self.assertEqual(self.client.get("/api/health").get_json()["status"], "ok")
 
     def test_chat_understands_a_natural_motor_question(self):
