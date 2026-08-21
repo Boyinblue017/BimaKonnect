@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify
-from backend.services.recommendation_servce import recommend_insurance
+try:
+    from backend.services.recommendation_servce import recommend_insurance
+except ModuleNotFoundError:
+    from services.recommendation_servce import recommend_insurance
 
 quiz_bp = Blueprint("quiz", __name__)
 

@@ -175,17 +175,20 @@ The current MVP includes:
 * A plain-language assistant for health, motor, life, crop, and small-business insurance, including simple Swahili prompts.
 * A transparent needs quiz that explains why each cover is worth exploring.
 * A searchable insurance glossary with everyday examples.
+* A claims guidance wizard with safety-first next steps and tailored document checklists for motor, health, crop, SME, and life cover.
 * A health endpoint suitable for deployment monitoring.
 
 The assistant is educational by design: it does not generate policy quotes, determine eligibility, or replace a licensed insurance professional.
 
 ## Run locally
 
-From the project root, activate the included virtual environment (or create your own), then run:
+From the project root, activate the included virtual environment (or create your own), then run either command:
 
 ```bash
 pip install -r backend/requirements.txt
 python -m backend.app
+# or
+python backend/app.py
 ```
 
 Open [http://localhost:5000](http://localhost:5000). The API health check is available at `/api/health`.

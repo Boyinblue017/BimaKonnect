@@ -6,6 +6,7 @@
   <meta name="description" content="Simple, practical insurance education for everyday life.">
   <title>BimaKonnect | Understand insurance, simply</title>
   <link rel="stylesheet" href="mvp.css">
+  <link rel="stylesheet" href="claims.css">
 </head>
 <body>
   <main class="shell">
@@ -56,6 +57,25 @@
         <input type="search" id="glossarySearch" placeholder="Search premium, claim, policy…">
         <div id="glossaryResults" class="glossary-results" aria-live="polite"></div>
       </article>
+    </section>
+    <section class="panel claims-panel" id="claims" aria-labelledby="claims-title">
+      <div class="claims-intro">
+        <p class="eyebrow">When something happens</p>
+        <h2 id="claims-title">Get a clear claims checklist</h2>
+        <p class="muted">Choose your cover and situation. Bima will help you prepare before contacting your insurer.</p>
+      </div>
+      <form id="claimsForm" class="claims-form">
+        <label for="claimCover">What cover do you have?</label>
+        <select id="claimCover" required>
+          <option value="">Choose cover type</option><option value="motor">Motor / vehicle</option><option value="health">Health</option><option value="crop">Crop / farm</option><option value="business">Business / SME</option><option value="life">Life</option>
+        </select>
+        <label for="claimIncident">What happened?</label>
+        <select id="claimIncident" required>
+          <option value="">Choose a situation</option><option value="accident">Accident or damage</option><option value="theft">Theft or loss</option><option value="medical">Medical treatment</option><option value="weather">Weather or crop loss</option><option value="death">Death of a policyholder</option><option value="other">Something else</option>
+        </select>
+        <button id="claimGuideBtn" type="submit">Show my checklist</button>
+      </form>
+      <div id="claimGuidance" class="claim-guidance" aria-live="polite"></div>
     </section>
     <footer>© 2026 BimaKonnect · Understanding comes before choosing.</footer>
   </main>

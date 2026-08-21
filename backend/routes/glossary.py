@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify
-from backend.services.glossary_service import get_glossary_term, get_all_glossary_terms, search_glossary_terms
+try:
+    from backend.services.glossary_service import get_glossary_term, get_all_glossary_terms, search_glossary_terms
+except ModuleNotFoundError:
+    from services.glossary_service import get_glossary_term, get_all_glossary_terms, search_glossary_terms
 
 glossary_bp = Blueprint("glossary", __name__)
 

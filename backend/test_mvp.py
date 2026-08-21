@@ -29,6 +29,11 @@ class BimaKonnectMvpTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertGreater(response.get_json()["total_results"], 0)
 
+    def test_claim_guidance_is_tailored_to_motor_cover(self):
+        response = self.client.post("/claims/guidance", json={"cover_type": "motor", "incident": "accident"})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Motor", response.get_json()["title"])
+
 
 if __name__ == "__main__":
     unittest.main()

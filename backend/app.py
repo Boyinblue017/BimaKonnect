@@ -8,13 +8,23 @@ FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fr
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 CORS(app)
 
-from backend.routes.chat import chat_bp
-from backend.routes.quiz import quiz_bp
-from backend.routes.glossary import glossary_bp
+try:
+    # Package mode: python -m backend.app (recommended for deployment/testing)
+    from backend.routes.chat import chat_bp
+    from backend.routes.quiz import quiz_bp
+    from backend.routes.glossary import glossary_bp
+    from backend.routes.claims import claims_bp
+except ModuleNotFoundError:
+    # Script mode: python backend/app.py (friendly for local development)
+    from routes.chat import chat_bp
+    from routes.quiz import quiz_bp
+    from routes.glossary import glossary_bp
+    from routes.claims import claims_bp
 
 app.register_blueprint(chat_bp)
 app.register_blueprint(quiz_bp)
 app.register_blueprint(glossary_bp)
+app.register_blueprint(claims_bp)
 
 @app.route("/")
 def home():

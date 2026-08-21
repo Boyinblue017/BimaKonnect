@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify
-from backend.services.knowledge_service import get_insurance_info
+try:
+    from backend.services.knowledge_service import get_insurance_info
+except ModuleNotFoundError:
+    from services.knowledge_service import get_insurance_info
 
 chat_bp = Blueprint("chat", __name__)
 
