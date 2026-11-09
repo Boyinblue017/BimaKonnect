@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sign in to your BimaKonnect account.">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Sign in | BimaKonnect</title>
+  <link rel="stylesheet" href="/mvp.css">
+  <link rel="stylesheet" href="/polish.css">
+  <link rel="stylesheet" href="/auth.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <a class="brand" href="/login"><span>✦</span> BimaKonnect</a>
+    <section class="panel auth-panel" aria-labelledby="auth-title">
+      <p class="eyebrow">Welcome back</p>
+      <h1 id="auth-title">Sign in to continue</h1>
+      <p class="muted">Your account is needed to use BimaKonnect’s learning tools.</p>
+      {% if error %}<p class="auth-error" role="alert">{{ error }}</p>{% endif %}
+      <form class="auth-form" method="post" action="/login">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" maxlength="254" value="{{ email }}" autocomplete="email" required>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" maxlength="128" autocomplete="current-password" required>
+        <button type="submit">Sign in</button>
+      </form>
+      <p class="auth-switch">New to BimaKonnect? <a href="/register">Create an account</a></p>
+    </section>
+    <p class="auth-note">Please don’t use your BimaKonnect password for other accounts.</p>
+  </main>
+</body>
+</html>

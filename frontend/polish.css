@@ -1,0 +1,156 @@
+.skip-link {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  transform: translateY(-160%);
+  border-radius: 9px;
+  background: var(--ink);
+  color: white;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.tool-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.tool-nav a {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--green);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.tool-nav a:hover,
+.quick-questions button:hover {
+  border-color: var(--green);
+  background: #f2f9f2;
+}
+
+.account-email {
+  align-self: center;
+  overflow: hidden;
+  max-width: 220px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-form {
+  display: inline-flex;
+}
+
+.logout-form button {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logout-form button:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.panel {
+  scroll-margin-top: 20px;
+}
+
+button,
+input,
+select,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(a, button, input, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid #8a9f20;
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.chat-input input:focus,
+.glossary-panel input:focus,
+.claims-form select:focus {
+  border-color: var(--green);
+}
+
+.message {
+  overflow-wrap: anywhere;
+}
+
+.chat-box:focus-visible,
+.glossary-results:focus-visible {
+  outline-offset: 5px;
+}
+
+.recommendation:last-child {
+  padding-bottom: 0;
+}
+
+@media (max-width: 720px) {
+  .tool-nav {
+    gap: 7px;
+  }
+
+  .tool-nav a {
+    padding: 8px 10px;
+    font-size: 0.82rem;
+  }
+
+  .chat-input {
+    align-items: stretch;
+  }
+
+  .chat-input input {
+    min-height: 48px;
+  }
+
+  .chat-input button,
+  .claims-form button,
+  #recommendBtn {
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 380px) {
+  .chat-input {
+    flex-direction: column;
+  }
+
+  .chat-input button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

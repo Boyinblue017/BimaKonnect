@@ -176,13 +176,14 @@ The current MVP includes:
 * A transparent needs quiz that explains why each cover is worth exploring.
 * A searchable insurance glossary with everyday examples.
 * A claims guidance wizard with safety-first next steps and tailored document checklists for motor, health, crop, SME, and life cover.
+* Required email/password accounts, with password hashes stored in SQLite and authenticated access to the learning tools.
 * A health endpoint suitable for deployment monitoring.
 
 The assistant is educational by design: it does not generate policy quotes, determine eligibility, or replace a licensed insurance professional.
 
 ## Privacy
 
-BimaKonnect's current MVP does not create accounts or store submitted chat questions, quiz answers, or claims-guide selections in an application database. Users should not submit sensitive personal, medical, financial, policy, or identity information. Read the full [Privacy Policy](frontend/privacy.html) before using or deploying the service.
+BimaKonnect stores account email addresses, password hashes, and account creation times. It does not deliberately store submitted chat questions, quiz answers, or claims-guide selections in an application database. Email verification and password reset are not yet available. Users should not submit sensitive personal, medical, financial, policy, or identity information. Read the full [Privacy Policy](frontend/privacy.html) before using or deploying the service.
 
 Before public launch, replace the placeholder privacy contact in the policy, identify the production hosting provider, and obtain a legal review for each country where BimaKonnect operates. The policy is not legal advice.
 
@@ -198,10 +199,11 @@ python backend/app.py
 ```
 
 Open [http://localhost:5000](http://localhost:5000). The API health check is available at `/api/health`.
+The app creates its SQLite account database at `backend/instance/bimakonnect.sqlite3` by default. Set `SECRET_KEY` to a stable, private value when running outside local development; set `BIMAKONNECT_DATABASE` to the desired SQLite file path if needed.
 
 ## Deployment
 
-The included `render.yaml` deploys the app to Render with `gunicorn backend.app:app`. Set the repository root as the service root; Render will install `backend/requirements.txt` and monitor `/api/health`.
+The included `render.yaml` deploys the app to Render with `gunicorn backend.app:app`, creates a secret session key, enables secure cookies, and monitors `/api/health`. SQLite data on Render's default filesystem is ephemeral; before accepting real accounts, attach persistent storage and set `BIMAKONNECT_DATABASE` to a database file on that storage. Account verification, password reset, and account deletion are not yet self-service features.
 
 ## Recommended next milestones
 

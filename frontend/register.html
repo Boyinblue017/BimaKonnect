@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create a BimaKonnect account.">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Create account | BimaKonnect</title>
+  <link rel="stylesheet" href="/mvp.css">
+  <link rel="stylesheet" href="/polish.css">
+  <link rel="stylesheet" href="/auth.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <a class="brand" href="/login"><span>✦</span> BimaKonnect</a>
+    <section class="panel auth-panel" aria-labelledby="auth-title">
+      <p class="eyebrow">A clearer start</p>
+      <h1 id="auth-title">Create your account</h1>
+      <p class="muted">Sign up to explore insurance guides, recommendations, and claims checklists.</p>
+      {% if error %}<p class="auth-error" role="alert">{{ error }}</p>{% endif %}
+      <form class="auth-form" method="post" action="/register">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" maxlength="254" value="{{ email }}" autocomplete="email" required>
+        <label for="password">Create a password</label>
+        <input id="password" name="password" type="password" minlength="12" maxlength="128" autocomplete="new-password" aria-describedby="password-hint" required>
+        <small id="password-hint">Use 12 to 128 characters. A unique passphrase is easier to remember.</small>
+        <label for="password_confirmation">Confirm password</label>
+        <input id="password_confirmation" name="password_confirmation" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+        <button type="submit">Create account</button>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
+    </section>
+    <p class="auth-note">Account creation does not verify your email. Password reset is not available yet.</p>
+  </main>
+</body>
+</html>
