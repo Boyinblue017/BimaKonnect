@@ -201,6 +201,10 @@ python backend/app.py
 Open [http://localhost:5000](http://localhost:5000). The API health check is available at `/api/health`.
 The app creates its SQLite account database at `backend/instance/bimakonnect.sqlite3` by default. Set `SECRET_KEY` to a stable, private value when running outside local development; set `BIMAKONNECT_DATABASE` to the desired SQLite file path if needed.
 
+## Frontend styles
+
+The dashboard uses Tailwind CSS and a compiled stylesheet at `frontend/tailwind.css`. After changing Tailwind utility classes in frontend HTML or JavaScript, run `npm install` and `npm run build:css`. Phosphor icons are loaded from jsDelivr.
+
 ## Deployment
 
 The included `render.yaml` deploys the app to Render with `gunicorn backend.app:app`, creates a secret session key, enables secure cookies, and monitors `/api/health`. SQLite data on Render's default filesystem is ephemeral; before accepting real accounts, attach persistent storage and set `BIMAKONNECT_DATABASE` to a database file on that storage. Account verification, password reset, and account deletion are not yet self-service features.

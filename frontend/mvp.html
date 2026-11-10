@@ -6,95 +6,170 @@
   <meta name="description" content="Simple, practical insurance education for everyday life.">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>BimaKonnect | Understand insurance, simply</title>
-  <link rel="stylesheet" href="mvp.css">
-  <link rel="stylesheet" href="claims.css">
-  <link rel="stylesheet" href="polish.css">
+  <link rel="stylesheet" href="/tailwind.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="/mvp.css">
+  <link rel="stylesheet" href="/claims.css">
+  <link rel="stylesheet" href="/polish.css">
+  <link rel="stylesheet" href="/dashboard.css">
 </head>
 <body>
-  <a class="skip-link" href="#assistant-title">Skip to insurance tools</a>
-  <main class="shell" id="top">
-    <header class="hero">
-      <a class="brand" href="#top" aria-label="BimaKonnect home"><span>✦</span> BimaKonnect</a>
-      <p class="eyebrow">Insurance, made understandable</p>
-      <h1>Make confident choices<br>about your protection.</h1>
-      <p class="hero-copy">Clear, practical insurance education for people, families, farmers and small businesses.</p>
-      <div class="trust-row"><span>Plain language</span><span>Free to explore</span><span>Built for everyday life</span></div>
-      <nav class="tool-nav" aria-label="Explore BimaKonnect">
-        <a href="#assistant-title">Ask Bima</a>
-        <a href="#quiz">Find cover</a>
-        <a href="#glossary">Glossary</a>
-        <a href="#claims">Claims guide</a>
-        <span class="account-email">{{ user_email }}</span>
-        <form class="logout-form" action="/logout" method="post">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-          <button type="submit">Sign out</button>
-        </form>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div class="app-layout flex min-h-screen">
+    <button id="sidebarOverlay" class="sidebar-overlay" type="button" aria-label="Close navigation" tabindex="-1"></button>
+    <aside id="sidebar" class="sidebar" aria-label="Main navigation">
+      <a class="sidebar-brand" href="#dashboard" aria-label="BimaKonnect overview">
+        <span class="brand-mark"><i class="ph ph-shield-check" aria-hidden="true"></i></span>
+        <span>Bima<span class="brand-light">Konnect</span></span>
+      </a>
+      <p class="sidebar-label">YOUR SPACE</p>
+      <nav class="sidebar-nav" aria-label="Dashboard sections">
+        <a class="sidebar-link active" href="#dashboard"><i class="ph ph-squares-four" aria-hidden="true"></i><span>Overview</span></a>
+        <a class="sidebar-link" href="#assistant"><i class="ph ph-chat-circle-dots" aria-hidden="true"></i><span>Ask Bima</span></a>
+        <a class="sidebar-link" href="#quiz"><i class="ph ph-compass" aria-hidden="true"></i><span>Explore cover</span></a>
+        <a class="sidebar-link" href="#glossary"><i class="ph ph-book-open-text" aria-hidden="true"></i><span>Insurance glossary</span></a>
+        <a class="sidebar-link" href="#claims"><i class="ph ph-clipboard-text" aria-hidden="true"></i><span>Claims guide</span></a>
       </nav>
-    </header>
-
-    <section class="panel chat-panel" aria-labelledby="assistant-title">
-      <div class="section-heading"><div><p class="eyebrow">Ask Bima</p><h2 id="assistant-title">Your insurance guide</h2></div><span class="online"><i></i> Available now</span></div>
-      <div id="chatBox" class="chat-box" aria-live="polite" aria-relevant="additions text">
-        <article class="message assistant-message"><strong>Bima</strong><p>Hi! I can explain insurance in simple terms. Ask me about health, motor, life, crop, or business insurance.</p></article>
-      </div>
-      <div class="quick-questions" aria-label="Suggested questions">
-        <button type="button" data-question="What is health insurance?">Health cover</button>
-        <button type="button" data-question="What is motor insurance?">Motor cover</button>
-        <button type="button" data-question="What is a premium?">What is a premium?</button>
-      </div>
-      <form id="chatForm" class="chat-input">
-        <label class="sr-only" for="question">Ask an insurance question</label>
-        <input type="text" id="question" maxlength="500" placeholder="Type your question…" autocomplete="off" required>
-        <button id="askBtn" type="submit">Ask Bima <span>→</span></button>
-      </form>
-      <p class="disclaimer">Education only. Always check the policy wording and speak to a licensed insurer or agent before buying cover.</p>
-    </section>
-
-    <section class="two-up" aria-label="Insurance tools">
-      <article class="panel tool-panel" id="quiz">
-        <p class="eyebrow">2-minute guide</p><h2>Find cover worth exploring</h2>
-        <p class="muted">Select what applies to you. We’ll suggest useful starting points—not a quote.</p>
-        <form id="quizForm" class="quiz-options">
-          <label><input type="checkbox" id="health"><span><b>My health matters most</b><small>I want help managing medical costs</small></span></label>
-          <label><input type="checkbox" id="vehicle"><span><b>I own or use a vehicle</b><small>I face road and third-party risks</small></span></label>
-          <label><input type="checkbox" id="farmer"><span><b>I farm for income</b><small>Weather can affect my harvest</small></span></label>
-          <label><input type="checkbox" id="business"><span><b>I run a business</b><small>I have stock, equipment, or customers</small></span></label>
-          <label><input type="checkbox" id="dependents"><span><b>People depend on my income</b><small>I help support a family</small></span></label>
-          <button id="recommendBtn" type="submit">See my guide</button>
+      <div class="sidebar-bottom">
+        <a class="sidebar-link" href="/privacy.html"><i class="ph ph-lock-key" aria-hidden="true"></i><span>Privacy</span></a>
+        <form action="/logout" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="sidebar-link sidebar-signout" type="submit"><i class="ph ph-sign-out" aria-hidden="true"></i><span>Sign out</span></button>
         </form>
-        <div id="recommendations" class="recommendations" aria-live="polite" aria-atomic="true"></div>
-      </article>
-
-      <article class="panel tool-panel glossary-panel" id="glossary">
-        <p class="eyebrow">Simple dictionary</p><h2>Insurance words, explained</h2>
-        <label class="sr-only" for="glossarySearch">Search the glossary</label>
-        <input type="search" id="glossarySearch" placeholder="Search premium, claim, policy…">
-        <div id="glossaryResults" class="glossary-results" aria-live="polite" aria-busy="true">
-          <p class="muted">Loading the glossary…</p>
+        <div class="sidebar-account">
+          <span class="account-avatar" aria-hidden="true">{{ user_email[0]|upper }}</span>
+          <span class="account-email">{{ user_email }}</span>
         </div>
-      </article>
-    </section>
-    <section class="panel claims-panel" id="claims" aria-labelledby="claims-title">
-      <div class="claims-intro">
-        <p class="eyebrow">When something happens</p>
-        <h2 id="claims-title">Get a clear claims checklist</h2>
-        <p class="muted">Choose your cover and situation. Bima will help you prepare before contacting your insurer.</p>
       </div>
-      <form id="claimsForm" class="claims-form">
-        <label for="claimCover">What cover do you have?</label>
-        <select id="claimCover" required>
-          <option value="">Choose cover type</option><option value="motor">Motor / vehicle</option><option value="health">Health</option><option value="crop">Crop / farm</option><option value="business">Business / SME</option><option value="life">Life</option>
-        </select>
-        <label for="claimIncident">What happened?</label>
-        <select id="claimIncident" required>
-          <option value="">Choose a situation</option><option value="accident">Accident or damage</option><option value="theft">Theft or loss</option><option value="medical">Medical treatment</option><option value="weather">Weather or crop loss</option><option value="death">Death of a policyholder</option><option value="other">Something else</option>
-        </select>
-        <button id="claimGuideBtn" type="submit">Show my checklist</button>
-      </form>
-      <div id="claimGuidance" class="claim-guidance" aria-live="polite" aria-atomic="true"></div>
-    </section>
-    <footer>© 2026 BimaKonnect · Understanding comes before choosing. · <a href="/privacy.html">Privacy Policy</a></footer>
-  </main>
-  <script src="mvp.js"></script>
+    </aside>
+
+    <div class="dashboard-main min-w-0 flex-1">
+      <header class="topbar">
+        <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+          <i class="ph ph-list" aria-hidden="true"></i>
+        </button>
+        <span class="topbar-title">Your learning space</span>
+        <div class="topbar-account"><span class="online-dot"></span><span>Account active</span></div>
+      </header>
+
+      <main id="main-content" class="dashboard-content mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <section id="dashboard" class="welcome-hero" aria-labelledby="welcome-title">
+          <div class="welcome-copy">
+            <p class="welcome-eyebrow"><i class="ph ph-sparkle" aria-hidden="true"></i> YOUR INSURANCE LEARNING SPACE</p>
+            <h1 id="welcome-title">Welcome back.</h1>
+            <p>Understand your options, build confidence, and take your next step at your own pace.</p>
+            <a class="hero-action" href="#assistant">Ask Bima a question <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+          </div>
+          <div class="hero-art" aria-hidden="true"><i class="ph ph-shield-check"></i></div>
+        </section>
+
+        <section class="quick-actions-section" aria-labelledby="quick-actions-title">
+          <div class="dashboard-section-heading">
+            <div><p class="section-kicker">A good place to start</p><h2 id="quick-actions-title">What would you like to do?</h2></div>
+            <p>Choose a guide to explore</p>
+          </div>
+          <div class="quick-actions-grid">
+            <a class="quick-action-card" href="#assistant">
+              <span class="quick-action-icon icon-blue"><i class="ph ph-chat-circle-dots" aria-hidden="true"></i></span>
+              <span class="quick-action-title">Ask Bima</span>
+              <span class="quick-action-description">Get clear answers to insurance questions.</span>
+              <i class="ph ph-arrow-up-right quick-action-arrow" aria-hidden="true"></i>
+            </a>
+            <a class="quick-action-card" href="#quiz">
+              <span class="quick-action-icon icon-indigo"><i class="ph ph-compass" aria-hidden="true"></i></span>
+              <span class="quick-action-title">Explore cover</span>
+              <span class="quick-action-description">Find types of cover worth learning about.</span>
+              <i class="ph ph-arrow-up-right quick-action-arrow" aria-hidden="true"></i>
+            </a>
+            <a class="quick-action-card" href="#glossary">
+              <span class="quick-action-icon icon-cyan"><i class="ph ph-book-open-text" aria-hidden="true"></i></span>
+              <span class="quick-action-title">Learn a new term</span>
+              <span class="quick-action-description">Look up insurance words in simple language.</span>
+              <i class="ph ph-arrow-up-right quick-action-arrow" aria-hidden="true"></i>
+            </a>
+            <a class="quick-action-card" href="#claims">
+              <span class="quick-action-icon icon-sky"><i class="ph ph-clipboard-text" aria-hidden="true"></i></span>
+              <span class="quick-action-title">Prepare for a claim</span>
+              <span class="quick-action-description">Get a practical checklist for what to do next.</span>
+              <i class="ph ph-arrow-up-right quick-action-arrow" aria-hidden="true"></i>
+            </a>
+          </div>
+        </section>
+
+        <section class="tools-section" aria-labelledby="tools-title">
+          <div class="dashboard-section-heading tools-heading">
+            <div><p class="section-kicker">Explore at your pace</p><h2 id="tools-title">Your insurance tools</h2></div>
+          </div>
+          <section id="assistant" class="panel chat-panel" aria-labelledby="assistant-title">
+            <div class="section-heading"><div><p class="eyebrow">ASK BIMA</p><h2 id="assistant-title">Your insurance guide</h2></div><span class="online"><i></i> Available now</span></div>
+            <div id="chatBox" class="chat-box" aria-live="polite" aria-relevant="additions text">
+              <article class="message assistant-message"><strong>Bima</strong><p>Hi! I can explain insurance in simple terms. Ask me about health, motor, life, crop, or business insurance.</p></article>
+            </div>
+            <div class="quick-questions" aria-label="Suggested questions">
+              <button type="button" data-question="What is health insurance?">Health cover</button>
+              <button type="button" data-question="What is motor insurance?">Motor cover</button>
+              <button type="button" data-question="What is a premium?">What is a premium?</button>
+            </div>
+            <form id="chatForm" class="chat-input" novalidate>
+              <label class="sr-only" for="question">Ask an insurance question</label>
+              <input type="text" id="question" maxlength="500" placeholder="Type your question…" autocomplete="off">
+              <button id="askBtn" type="submit">Ask Bima <span>→</span></button>
+            </form>
+            <p class="disclaimer">Education only. Always check the policy wording and speak to a licensed insurer or agent before buying cover.</p>
+          </section>
+
+          <div class="two-up" aria-label="Insurance tools">
+            <article class="panel tool-panel" id="quiz">
+              <p class="eyebrow">2-MINUTE GUIDE</p><h2>Find cover worth exploring</h2>
+              <p class="muted">Select what applies to you. We’ll suggest useful starting points—not a quote.</p>
+              <form id="quizForm" class="quiz-options">
+                <label><input type="checkbox" id="health"><span><b>My health matters most</b><small>I want help managing medical costs</small></span></label>
+                <label><input type="checkbox" id="vehicle"><span><b>I own or use a vehicle</b><small>I face road and third-party risks</small></span></label>
+                <label><input type="checkbox" id="farmer"><span><b>I farm for income</b><small>Weather can affect my harvest</small></span></label>
+                <label><input type="checkbox" id="business"><span><b>I run a business</b><small>I have stock, equipment, or customers</small></span></label>
+                <label><input type="checkbox" id="dependents"><span><b>People depend on my income</b><small>I help support a family</small></span></label>
+                <button id="recommendBtn" type="submit">See my guide</button>
+              </form>
+              <div id="recommendations" class="recommendations" aria-live="polite" aria-atomic="true"></div>
+            </article>
+
+            <article class="panel tool-panel glossary-panel" id="glossary">
+              <p class="eyebrow">SIMPLE DICTIONARY</p><h2>Insurance words, explained</h2>
+              <label class="sr-only" for="glossarySearch">Search the glossary</label>
+              <input type="search" id="glossarySearch" placeholder="Search premium, claim, policy…">
+              <div id="glossaryResults" class="glossary-results" aria-live="polite" aria-busy="true">
+                <p class="muted">Loading the glossary…</p>
+              </div>
+            </article>
+          </div>
+
+          <section class="panel claims-panel" id="claims" aria-labelledby="claims-title">
+            <div class="claims-intro">
+              <p class="eyebrow">WHEN SOMETHING HAPPENS</p>
+              <h2 id="claims-title">Get a clear claims checklist</h2>
+              <p class="muted">Choose your cover and situation. Bima will help you prepare before contacting your insurer.</p>
+            </div>
+            <form id="claimsForm" class="claims-form" novalidate>
+              <label for="claimCover">What cover do you have?
+                <select id="claimCover">
+                  <option value="">Choose cover type</option><option value="motor">Motor / vehicle</option><option value="health">Health</option><option value="crop">Crop / farm</option><option value="business">Business / SME</option><option value="life">Life</option>
+                </select>
+              </label>
+              <label for="claimIncident">What happened?
+                <select id="claimIncident">
+                  <option value="">Choose a situation</option><option value="accident">Accident or damage</option><option value="theft">Theft or loss</option><option value="medical">Medical treatment</option><option value="weather">Weather or crop loss</option><option value="death">Death of a policyholder</option><option value="other">Something else</option>
+                </select>
+              </label>
+              <button id="claimGuideBtn" type="submit">Show my checklist</button>
+            </form>
+            <div id="claimGuidance" class="claim-guidance" aria-live="polite" aria-atomic="true"></div>
+          </section>
+        </section>
+        <footer class="dashboard-footer">© 2026 BimaKonnect · Understanding comes before choosing. · <a href="/privacy.html">Privacy Policy</a></footer>
+      </main>
+    </div>
+  </div>
+  <div id="toastRegion" class="toast-region" role="status" aria-live="polite" aria-relevant="additions"></div>
+  <script src="/mvp.js" defer></script>
 </body>
 </html>
