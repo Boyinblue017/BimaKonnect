@@ -1,0 +1,49 @@
+@baseUrl = http://127.0.0.1:5000
+# Sign in in the browser. Copy the session cookie from browser storage and the
+# CSRF token from the page's <meta name="csrf-token"> element.
+@sessionCookie = replace-with-flask-session-cookie
+@csrfToken = replace-with-csrf-token
+
+### Public health check
+GET {{baseUrl}}/api/health
+
+### Signed-in dashboard
+GET {{baseUrl}}/
+Cookie: session={{sessionCookie}}
+
+### Ask Bima
+POST {{baseUrl}}/chat
+Content-Type: application/json
+Cookie: session={{sessionCookie}}
+X-CSRF-Token: {{csrfToken}}
+
+{
+  "question": "What is motor insurance?"
+}
+
+### Get cover recommendations
+POST {{baseUrl}}/recommend
+Content-Type: application/json
+Cookie: session={{sessionCookie}}
+X-CSRF-Token: {{csrfToken}}
+
+{
+  "vehicle": true,
+  "farmer": false,
+  "business": true,
+  "dependents": true
+}
+
+### Search the glossary
+POST {{baseUrl}}/glossary/search
+Content-Type: application/json
+Cookie: session={{sessionCookie}}
+X-CSRF-Token: {{csrfToken}}
+
+{
+  "query": "premium"
+}
+
+### Browse insurance specialists
+GET {{baseUrl}}/api/specialists
+Cookie: session={{sessionCookie}}

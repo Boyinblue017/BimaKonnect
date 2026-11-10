@@ -2,7 +2,7 @@
   "name": "bimakonnect-frontend",
   "private": true,
   "scripts": {
-    "build:css": "tailwindcss -i frontend/tailwind.input.css -o frontend/tailwind.css --minify"
+    "build:css": "tailwindcss -i frontend/src/tailwind.input.css -o frontend/static/css/tailwind.css --minify"
   },
   "devDependencies": {
     "tailwindcss": "3.4.17"

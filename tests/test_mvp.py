@@ -44,20 +44,20 @@ class BimaKonnectMvpTests(unittest.TestCase):
         self.assertIn('id="toastRegion"', home_html)
         self.assertIn("ph-shield-check", home_html)
         home.close()
-        tailwind_css = self.client.get("/tailwind.css")
+        tailwind_css = self.client.get("/css/tailwind.css")
         self.assertEqual(tailwind_css.status_code, 200)
         tailwind_css.close()
-        dashboard_css = self.client.get("/dashboard.css")
+        dashboard_css = self.client.get("/css/dashboard.css")
         self.assertEqual(dashboard_css.status_code, 200)
         dashboard_css.close()
         directory_page = self.client.get("/specialists")
         self.assertEqual(directory_page.status_code, 200)
         directory_page.close()
         for asset_path in (
-            "/directory.css",
-            "/directory.js",
-            "/admin-specialists.js",
-            "/specialist-account.js",
+            "/css/directory.css",
+            "/js/directory.js",
+            "/js/admin-specialists.js",
+            "/js/specialist-account.js",
         ):
             asset = self.client.get(asset_path)
             self.assertEqual(asset.status_code, 200)
@@ -91,6 +91,9 @@ class BimaKonnectMvpTests(unittest.TestCase):
     def test_account_required_and_logout_ends_access(self):
         anonymous = app.test_client()
         self.assertEqual(anonymous.get("/").status_code, 302)
+        admin_redirect = anonymous.get("/admin/specialists")
+        self.assertEqual(admin_redirect.status_code, 302)
+        self.assertIn("next=/admin/specialists", admin_redirect.location)
         self.assertEqual(anonymous.get("/mvp.html").status_code, 302)
         self.assertEqual(anonymous.get("/MVP.html").status_code, 302)
         self.assertEqual(anonymous.post("/chat", json={"question": "What is insurance?"}).status_code, 401)
@@ -116,6 +119,40 @@ class BimaKonnectMvpTests(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(client.get("/").status_code, 200)
+
+    def test_login_returns_to_requested_local_page_and_rejects_external_redirects(self):
+        client = app.test_client()
+        login_page = client.get("/admin/specialists")
+        self.assertIn("next=/admin/specialists", login_page.location)
+        client.get(login_page.location)
+        with client.session_transaction() as browser_session:
+            csrf_token = browser_session["csrf_token"]
+        response = client.post(
+            "/login?next=/admin/specialists",
+            data={
+                "csrf_token": csrf_token,
+                "next": "/admin/specialists",
+                "email": "tester@example.com",
+                "password": "a-strong-test-password",
+            },
+        )
+        self.assertEqual(response.location, "/admin/specialists")
+        self.assertEqual(client.get(response.location).status_code, 403)
+
+        other_client = app.test_client()
+        other_client.get("/login")
+        with other_client.session_transaction() as browser_session:
+            csrf_token = browser_session["csrf_token"]
+        response = other_client.post(
+            "/login?next=https://example.com",
+            data={
+                "csrf_token": csrf_token,
+                "next": "https://example.com",
+                "email": "tester@example.com",
+                "password": "a-strong-test-password",
+            },
+        )
+        self.assertEqual(response.location, "/")
 
     def test_password_is_stored_as_a_hash(self):
         connection = sqlite3.connect(app.config["DATABASE_PATH"])

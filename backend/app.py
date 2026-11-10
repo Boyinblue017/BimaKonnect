@@ -5,15 +5,17 @@ from flask import Flask, jsonify, redirect, render_template, request, session, u
 from flask_cors import CORS
 
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
+STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
+TEMPLATES_DIR = os.path.join(FRONTEND_DIR, "templates")
 DEFAULT_DATABASE_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "instance", "bimakonnect.sqlite3")
 )
 
 app = Flask(
     __name__,
-    static_folder=FRONTEND_DIR,
+    static_folder=STATIC_DIR,
     static_url_path="",
-    template_folder=FRONTEND_DIR,
+    template_folder=TEMPLATES_DIR,
 )
 app.config.update(
     SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
@@ -60,6 +62,7 @@ PUBLIC_ENDPOINTS = {
     "auth.login",
     "auth.register",
     "health",
+    "privacy",
     "static",
 }
 
@@ -99,7 +102,7 @@ def require_account_and_csrf():
         session.clear()
         if request.is_json or request.path.startswith(("/chat", "/recommend", "/glossary", "/claims")):
             return jsonify({"error": "Please sign in to continue."}), 401
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.login", next=request.path))
 
     if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
         supplied_token = request.headers.get("X-CSRF-Token") or request.form.get("csrf_token", "")
@@ -117,6 +120,11 @@ def home():
         user_email=user["email"],
         user_role=user["role"],
     )
+
+
+@app.route("/privacy.html")
+def privacy():
+    return render_template("privacy.html")
 
 
 @app.route("/api/health")

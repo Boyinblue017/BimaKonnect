@@ -1,4 +1,5 @@
 import secrets
+from urllib.parse import urlsplit
 
 from flask import Blueprint, current_app, redirect, render_template, request, session, url_for
 
@@ -35,10 +36,20 @@ def _start_session(user):
     session.permanent = True
 
 
+def _safe_next_url(target):
+    if not target or not target.startswith("/") or target.startswith("//") or "\\" in target:
+        return None
+    parsed = urlsplit(target)
+    if parsed.scheme or parsed.netloc:
+        return None
+    return target
+
+
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    next_url = _safe_next_url(request.values.get("next", ""))
     if session.get("user_id") is not None:
-        return redirect(url_for("home"))
+        return redirect(next_url or url_for("home"))
     error = None
     email = ""
     if request.method == "POST":
@@ -50,8 +61,8 @@ def login():
             error = "That email and password combination was not recognized."
         else:
             _start_session(user)
-            return redirect(url_for("home"))
-    return render_template("login.html", error=error, email=email)
+            return redirect(next_url or url_for("home"))
+    return render_template("login.html", error=error, email=email, next_url=next_url or "")
 
 
 @auth_bp.route("/register", methods=["GET", "POST"])

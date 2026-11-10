@@ -6,9 +6,9 @@
   <meta name="description" content="Sign in to your BimaKonnect account.">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>Sign in | BimaKonnect</title>
-  <link rel="stylesheet" href="/mvp.css">
-  <link rel="stylesheet" href="/polish.css">
-  <link rel="stylesheet" href="/auth.css">
+  <link rel="stylesheet" href="/css/mvp.css">
+  <link rel="stylesheet" href="/css/polish.css">
+  <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
   <main class="auth-shell">
@@ -20,6 +20,7 @@
       {% if error %}<p class="auth-error" role="alert">{{ error }}</p>{% endif %}
       <form class="auth-form" method="post" action="/login">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="next" value="{{ next_url }}">
         <label for="email">Email address</label>
         <input id="email" name="email" type="email" maxlength="254" value="{{ email }}" autocomplete="email" required>
         <label for="password">Password</label>

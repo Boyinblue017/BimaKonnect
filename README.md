@@ -135,34 +135,29 @@ Support for:
 
 ---
 
-## Proposed Project Structure
+## Project structure
 
 ```text
-bimakonnect/
-│
+.
 ├── backend/
 │   ├── app.py
-│   ├── routes/
-│   │   ├── chat.py
-│   │   ├── quiz.py
-│   │   └── glossary.py
-│   │
-│   ├── services/
-│   │   ├── knowledge_service.py
-│   │   └── recommendation_service.py
-│   │
 │   ├── data/
-│   │   └── insurance_data.json
-│   │
-│   └── requirements.txt
-│
+│   ├── routes/
+│   └── services/
 ├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── app.js
-│
+│   ├── src/                 # Tailwind CSS source
+│   ├── static/
+│   │   ├── css/             # Stylesheets served by Flask
+│   │   └── js/              # Browser scripts served by Flask
+│   └── templates/           # Jinja HTML pages
+├── tests/
+│   ├── api.http             # Manual API requests
+│   └── test_mvp.py          # Automated backend tests
+├── documents/               # Project reference documents
+├── package.json             # Frontend build tooling
+├── requirements.txt         # Python dependencies
+├── render.yaml              # Render deployment configuration
 └── README.md
-
 ```
 
 ---
@@ -184,7 +179,7 @@ The assistant is educational by design: it does not generate policy quotes, dete
 
 ## Privacy
 
-BimaKonnect stores account email addresses, password hashes, and account creation times. Specialist profiles include public contact details, and ratings are associated with the rating user's account. It does not deliberately store submitted chat questions, quiz answers, or claims-guide selections in an application database. Email verification and user password reset are not yet available. Users should not submit sensitive personal, medical, financial, policy, or identity information. Read the full [Privacy Policy](frontend/privacy.html) before using or deploying the service.
+BimaKonnect stores account email addresses, password hashes, and account creation times. Specialist profiles include public contact details, and ratings are associated with the rating user's account. It does not deliberately store submitted chat questions, quiz answers, or claims-guide selections in an application database. Email verification and user password reset are not yet available. Users should not submit sensitive personal, medical, financial, policy, or identity information. Read the full [Privacy Policy](frontend/templates/privacy.html) before using or deploying the service.
 
 Before public launch, replace the placeholder privacy contact in the policy, identify the production hosting provider, and obtain a legal review for each country where BimaKonnect operates. The policy is not legal advice.
 
@@ -195,17 +190,17 @@ From the project root, activate the included virtual environment (or create your
 ```bash
 pip install -r requirements.txt
 python -m backend.app
-# or
-python backend/app.py
 ```
 
 Open [http://localhost:5000](http://localhost:5000). The API health check is available at `/api/health`.
 The app creates its SQLite account database at `backend/instance/bimakonnect.sqlite3` by default. Set `SECRET_KEY` to a stable, private value when running outside local development; set `BIMAKONNECT_DATABASE` to the desired SQLite file path if needed.
 To provision the initial administrator, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` before starting the app. Use a unique password of at least 12 characters. If the email already belongs to an account, startup promotes that account to administrator and retains its current password. Administrators can add specialists at `/admin/specialists`; specialists should change the temporary password and maintain their profile at `/specialist/account`.
 
-## Frontend styles
+## Frontend assets
 
-The dashboard uses Tailwind CSS and a compiled stylesheet at `frontend/tailwind.css`. After changing Tailwind utility classes in frontend HTML or JavaScript, run `npm install` and `npm run build:css`. Phosphor icons are loaded from jsDelivr.
+HTML pages live in `frontend/templates`; Flask-served assets live in `frontend/static/css` and `frontend/static/js`. The dashboard uses Tailwind CSS. After changing utility classes in templates or JavaScript, run `npm install` and `npm run build:css` to rebuild `frontend/static/css/tailwind.css`. Phosphor icons are loaded from jsDelivr.
+
+Run automated tests from the repository root with `python -m unittest discover -s tests`. Manual API requests are in `tests/api.http`; the protected POST requests require a signed-in session cookie and its matching CSRF token.
 
 ## Deployment
 
