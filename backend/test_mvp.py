@@ -50,6 +50,18 @@ class BimaKonnectMvpTests(unittest.TestCase):
         dashboard_css = self.client.get("/dashboard.css")
         self.assertEqual(dashboard_css.status_code, 200)
         dashboard_css.close()
+        directory_page = self.client.get("/specialists")
+        self.assertEqual(directory_page.status_code, 200)
+        directory_page.close()
+        for asset_path in (
+            "/directory.css",
+            "/directory.js",
+            "/admin-specialists.js",
+            "/specialist-account.js",
+        ):
+            asset = self.client.get(asset_path)
+            self.assertEqual(asset.status_code, 200)
+            asset.close()
         privacy = self.client.get("/privacy.html")
         self.assertEqual(privacy.status_code, 200)
         privacy.close()
@@ -147,6 +159,120 @@ class BimaKonnectMvpTests(unittest.TestCase):
     def test_protected_post_requires_csrf_token(self):
         response = self.client.post("/chat", json={"question": "What is insurance?"})
         self.assertEqual(response.status_code, 400)
+
+    def test_only_admins_can_create_specialists_and_users_can_rate_once(self):
+        self.assertEqual(self.client.get("/admin/specialists").status_code, 403)
+        initialize_database(
+            app.config["DATABASE_PATH"],
+            admin_email="admin@example.com",
+            admin_password="a-strong-admin-password",
+        )
+        admin = app.test_client()
+        admin.get("/login")
+        with admin.session_transaction() as browser_session:
+            csrf_token = browser_session["csrf_token"]
+        login = admin.post(
+            "/login",
+            data={
+                "csrf_token": csrf_token,
+                "email": "ADMIN@example.com",
+                "password": "a-strong-admin-password",
+            },
+        )
+        self.assertEqual(login.status_code, 302)
+        with admin.session_transaction() as browser_session:
+            csrf_token = browser_session["csrf_token"]
+        admin_page = admin.get("/admin/specialists")
+        self.assertEqual(admin_page.status_code, 200)
+        admin_page.close()
+
+        payload = {
+            "login_email": "specialist@example.com",
+            "temporary_password": "a-strong-specialist-password",
+            "display_name": "Amina Specialist",
+            "public_email": "amina@example.com",
+            "phone": "+254 700 123 456",
+            "specialty": "Health insurance",
+            "region": "Nairobi, Kenya",
+            "bio": "Helps people understand health cover.",
+        }
+        created = admin.post(
+            "/api/admin/specialists",
+            json=payload,
+            headers={"X-CSRF-Token": csrf_token},
+        )
+        self.assertEqual(created.status_code, 201)
+        self.assertEqual(
+            self.post_api(
+                "/api/admin/specialists",
+                {**payload, "login_email": "another@example.com"},
+            ).status_code,
+            403,
+        )
+
+        directory = self.client.get("/specialists")
+        self.assertEqual(directory.status_code, 200)
+        directory.close()
+        listed = self.client.get("/api/specialists").get_json()["specialists"]
+        self.assertEqual(len(listed), 1)
+        specialist_id = listed[0]["id"]
+        rating = self.post_api(f"/api/specialists/{specialist_id}/rating", {"rating": 5})
+        self.assertEqual(rating.status_code, 200)
+        self.assertEqual(
+            self.post_api(f"/api/specialists/{specialist_id}/rating", {"rating": True}).status_code,
+            400,
+        )
+        changed_rating = self.post_api(f"/api/specialists/{specialist_id}/rating", {"rating": 3})
+        self.assertEqual(changed_rating.status_code, 200)
+        updated = self.client.get("/api/specialists").get_json()["specialists"][0]
+        self.assertEqual(updated["rating_count"], 1)
+        self.assertEqual(updated["average_rating"], 3.0)
+        self.assertEqual(updated["my_rating"], 3)
+
+        specialist = app.test_client()
+        specialist.get("/login")
+        with specialist.session_transaction() as browser_session:
+            csrf_token = browser_session["csrf_token"]
+        signed_in = specialist.post(
+            "/login",
+            data={
+                "csrf_token": csrf_token,
+                "email": "specialist@example.com",
+                "password": "a-strong-specialist-password",
+            },
+        )
+        self.assertEqual(signed_in.status_code, 302)
+        profile_page = specialist.get("/specialist/account")
+        self.assertEqual(profile_page.status_code, 200)
+        profile_page.close()
+        with specialist.session_transaction() as browser_session:
+            csrf_token = browser_session["csrf_token"]
+        own_rating = specialist.post(
+            f"/api/specialists/{specialist_id}/rating",
+            json={"rating": 5},
+            headers={"X-CSRF-Token": csrf_token},
+        )
+        self.assertEqual(own_rating.status_code, 400)
+        own_profile = specialist.post(
+            "/api/specialists/me",
+            json={**payload, "display_name": "Amina Updated"},
+            headers={"X-CSRF-Token": csrf_token},
+        )
+        self.assertEqual(own_profile.status_code, 200)
+        changed_password = specialist.post(
+            "/api/specialists/me/password",
+            json={
+                "current_password": "a-strong-specialist-password",
+                "new_password": "a-new-specialist-password",
+            },
+            headers={"X-CSRF-Token": csrf_token},
+        )
+        self.assertEqual(changed_password.status_code, 200)
+        self.assertEqual(specialist.get("/admin/specialists").status_code, 403)
+
+    def test_admin_bootstrap_requires_both_credentials(self):
+        with self.assertRaises(ValueError):
+            initialize_database(app.config["DATABASE_PATH"], admin_email="admin@example.com")
 
 
 if __name__ == "__main__":

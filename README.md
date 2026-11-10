@@ -177,13 +177,14 @@ The current MVP includes:
 * A searchable insurance glossary with everyday examples.
 * A claims guidance wizard with safety-first next steps and tailored document checklists for motor, health, crop, SME, and life cover.
 * Required email/password accounts, with password hashes stored in SQLite and authenticated access to the learning tools.
+* A directory of admin-managed insurance specialists with public contact profiles and one editable 1–5-star rating per signed-in user and specialist.
 * A health endpoint suitable for deployment monitoring.
 
 The assistant is educational by design: it does not generate policy quotes, determine eligibility, or replace a licensed insurance professional.
 
 ## Privacy
 
-BimaKonnect stores account email addresses, password hashes, and account creation times. It does not deliberately store submitted chat questions, quiz answers, or claims-guide selections in an application database. Email verification and password reset are not yet available. Users should not submit sensitive personal, medical, financial, policy, or identity information. Read the full [Privacy Policy](frontend/privacy.html) before using or deploying the service.
+BimaKonnect stores account email addresses, password hashes, and account creation times. Specialist profiles include public contact details, and ratings are associated with the rating user's account. It does not deliberately store submitted chat questions, quiz answers, or claims-guide selections in an application database. Email verification and user password reset are not yet available. Users should not submit sensitive personal, medical, financial, policy, or identity information. Read the full [Privacy Policy](frontend/privacy.html) before using or deploying the service.
 
 Before public launch, replace the placeholder privacy contact in the policy, identify the production hosting provider, and obtain a legal review for each country where BimaKonnect operates. The policy is not legal advice.
 
@@ -200,6 +201,7 @@ python backend/app.py
 
 Open [http://localhost:5000](http://localhost:5000). The API health check is available at `/api/health`.
 The app creates its SQLite account database at `backend/instance/bimakonnect.sqlite3` by default. Set `SECRET_KEY` to a stable, private value when running outside local development; set `BIMAKONNECT_DATABASE` to the desired SQLite file path if needed.
+To provision the initial administrator, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` before starting the app. Use a unique password of at least 12 characters. If the email already belongs to an account, startup promotes that account to administrator and retains its current password. Administrators can add specialists at `/admin/specialists`; specialists should change the temporary password and maintain their profile at `/specialist/account`.
 
 ## Frontend styles
 
@@ -207,7 +209,7 @@ The dashboard uses Tailwind CSS and a compiled stylesheet at `frontend/tailwind.
 
 ## Deployment
 
-The included `render.yaml` deploys the app to Render with `gunicorn backend.app:app`, creates a secret session key, enables secure cookies, and monitors `/api/health`. SQLite data on Render's default filesystem is ephemeral; before accepting real accounts, attach persistent storage and set `BIMAKONNECT_DATABASE` to a database file on that storage. Account verification, password reset, and account deletion are not yet self-service features.
+The included `render.yaml` deploys the app to Render with `gunicorn backend.app:app`, creates a secret session key, enables secure cookies, and monitors `/api/health`. Configure `ADMIN_EMAIL` and `ADMIN_PASSWORD` as private Render environment variables to provision the first administrator. SQLite data on Render's default filesystem is ephemeral; before accepting real accounts, attach persistent storage and set `BIMAKONNECT_DATABASE` to a database file on that storage. Account verification, regular-user password reset, and account deletion are not yet self-service features.
 
 ## Recommended next milestones
 

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Manage your BimaKonnect specialist profile.">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>My specialist profile | BimaKonnect</title>
+  <link rel="stylesheet" href="/tailwind.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="/directory.css">
+</head>
+<body>
+  <main class="directory-shell admin-shell">
+    <header class="directory-topbar">
+      <a class="directory-brand" href="/"><span><i class="ph ph-shield-check" aria-hidden="true"></i></span>BimaKonnect</a>
+      <a class="directory-back" href="/"><i class="ph ph-arrow-left" aria-hidden="true"></i> Back to learning space</a>
+    </header>
+    <section class="directory-heading admin-heading">
+      <p class="directory-kicker"><i class="ph ph-identification-card" aria-hidden="true"></i> SPECIALIST ACCOUNT</p>
+      <h1>My public profile</h1>
+      <p>Keep your contact details and profile up to date for people looking for specialist guidance.</p>
+    </section>
+    <section class="admin-create-card" aria-labelledby="profile-title">
+      <h2 id="profile-title">Profile details</h2>
+      <form id="specialistProfileForm" class="specialist-form" novalidate>
+        <label>Full name<input name="display_name" maxlength="100" required></label>
+        <label>Specialty / cover area<input name="specialty" maxlength="100" required></label>
+        <label>Location<input name="region" maxlength="120" required></label>
+        <label>Public contact email<input name="public_email" type="email" maxlength="254" required></label>
+        <label>Public phone<input name="phone" type="tel" maxlength="40" required></label>
+        <label class="field-wide">Short profile<textarea name="bio" maxlength="800" rows="4" required></textarea></label>
+        <button class="directory-primary-button field-wide" type="submit">Save profile</button>
+      </form>
+    </section>
+    <section class="admin-create-card password-card" aria-labelledby="password-title">
+      <h2 id="password-title">Change sign-in password</h2>
+      <form id="specialistPasswordForm" class="specialist-form" novalidate>
+        <label>Current password<input name="current_password" type="password" autocomplete="current-password" maxlength="128" required></label>
+        <label>New password<input name="new_password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required><small>Use 12 to 128 characters.</small></label>
+        <button class="directory-primary-button field-wide" type="submit">Update password</button>
+      </form>
+    </section>
+    <p class="profile-note">Your sign-in email and password are separate from the public contact details on this profile.</p>
+  </main>
+  <div id="toastRegion" class="directory-toast-region" role="status" aria-live="polite" aria-relevant="additions"></div>
+  <script src="/specialist-account.js" defer></script>
+</body>
+</html>

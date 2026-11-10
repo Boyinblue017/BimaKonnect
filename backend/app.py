@@ -32,6 +32,7 @@ try:
     from backend.routes.glossary import glossary_bp
     from backend.routes.claims import claims_bp
     from backend.routes.auth import auth_bp
+    from backend.routes.specialists import specialists_bp
     from backend.services.auth_service import get_user_by_id, initialize_database
 except ModuleNotFoundError:
     # Script mode: python backend/app.py (friendly for local development)
@@ -40,6 +41,7 @@ except ModuleNotFoundError:
     from routes.glossary import glossary_bp
     from routes.claims import claims_bp
     from routes.auth import auth_bp
+    from routes.specialists import specialists_bp
     from services.auth_service import get_user_by_id, initialize_database
 
 app.register_blueprint(chat_bp)
@@ -47,7 +49,12 @@ app.register_blueprint(quiz_bp)
 app.register_blueprint(glossary_bp)
 app.register_blueprint(claims_bp)
 app.register_blueprint(auth_bp)
-initialize_database(app.config["DATABASE_PATH"])
+app.register_blueprint(specialists_bp)
+initialize_database(
+    app.config["DATABASE_PATH"],
+    admin_email=os.environ.get("ADMIN_EMAIL"),
+    admin_password=os.environ.get("ADMIN_PASSWORD"),
+)
 
 PUBLIC_ENDPOINTS = {
     "auth.login",
@@ -104,7 +111,12 @@ def require_account_and_csrf():
 @app.route("/")
 def home():
     user = get_user_by_id(app.config["DATABASE_PATH"], session["user_id"])
-    return render_template("mvp.html", csrf_token=csrf_token(), user_email=user["email"])
+    return render_template(
+        "mvp.html",
+        csrf_token=csrf_token(),
+        user_email=user["email"],
+        user_role=user["role"],
+    )
 
 
 @app.route("/api/health")

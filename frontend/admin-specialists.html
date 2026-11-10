@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Manage insurance specialist accounts.">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Manage specialists | BimaKonnect</title>
+  <link rel="stylesheet" href="/tailwind.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="/directory.css">
+</head>
+<body>
+  <main class="directory-shell admin-shell">
+    <header class="directory-topbar">
+      <a class="directory-brand" href="/"><span><i class="ph ph-shield-check" aria-hidden="true"></i></span>BimaKonnect</a>
+      <a class="directory-back" href="/"><i class="ph ph-arrow-left" aria-hidden="true"></i> Back to learning space</a>
+    </header>
+    <section class="directory-heading admin-heading">
+      <p class="directory-kicker"><i class="ph ph-user-gear" aria-hidden="true"></i> ADMINISTRATION</p>
+      <h1>Manage specialists</h1>
+      <p>Create specialist accounts and maintain their public directory profiles.</p>
+    </section>
+    <section class="admin-create-card" aria-labelledby="create-title">
+      <h2 id="create-title">Add a specialist</h2>
+      <p class="admin-helper">The sign-in email and temporary password are for account access. Share the temporary password with the specialist through a secure channel.</p>
+      <form id="specialistCreateForm" class="specialist-form" novalidate>
+        <label>Full name<input name="display_name" maxlength="100" required></label>
+        <label>Specialty / cover area<input name="specialty" maxlength="100" placeholder="e.g. Health insurance" required></label>
+        <label>Location<input name="region" maxlength="120" placeholder="e.g. Nairobi, Kenya" required></label>
+        <label>Public contact email<input name="public_email" type="email" maxlength="254" required></label>
+        <label>Public phone<input name="phone" type="tel" maxlength="40" required></label>
+        <label>Sign-in email<input name="login_email" type="email" maxlength="254" required></label>
+        <label class="field-wide">Temporary password<input name="temporary_password" type="password" minlength="12" maxlength="128" autocomplete="new-password" required><small>At least 12 characters. The specialist can use this to sign in and update their profile.</small></label>
+        <label class="field-wide">Short profile<textarea name="bio" maxlength="800" rows="4" required placeholder="Describe the specialist’s experience and how they can help."></textarea></label>
+        <button class="directory-primary-button field-wide" type="submit">Create specialist account</button>
+      </form>
+    </section>
+    <section class="admin-list-section" aria-labelledby="admin-list-title">
+      <div class="directory-list-heading"><h2 id="admin-list-title">Directory accounts</h2><span id="adminSpecialistCount"></span></div>
+      <div id="adminSpecialistList" class="admin-specialist-list" aria-live="polite" aria-busy="true"><p class="directory-message">Loading specialists…</p></div>
+    </section>
+  </main>
+  <div id="toastRegion" class="directory-toast-region" role="status" aria-live="polite" aria-relevant="additions"></div>
+  <script src="/admin-specialists.js" defer></script>
+</body>
+</html>

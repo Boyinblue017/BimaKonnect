@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find and contact insurance specialists on BimaKonnect.">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Insurance specialists | BimaKonnect</title>
+  <link rel="stylesheet" href="/tailwind.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="/directory.css">
+</head>
+<body>
+  <main class="directory-shell">
+    <header class="directory-topbar">
+      <a class="directory-brand" href="/"><span><i class="ph ph-shield-check" aria-hidden="true"></i></span>BimaKonnect</a>
+      <a class="directory-back" href="/"><i class="ph ph-arrow-left" aria-hidden="true"></i> Back to learning space</a>
+    </header>
+    <section class="directory-heading">
+      <p class="directory-kicker"><i class="ph ph-handshake" aria-hidden="true"></i> HUMAN SUPPORT</p>
+      <h1>Find an insurance specialist</h1>
+      <p>Browse specialist profiles and contact someone directly for personal guidance.</p>
+      <label class="directory-search-label" for="specialistSearch">Search by name, cover, or location</label>
+      <input id="specialistSearch" class="directory-search" type="search" placeholder="Try “health” or “Nairobi”" autocomplete="off">
+    </section>
+    <section aria-labelledby="specialist-list-title">
+      <div class="directory-list-heading">
+        <h2 id="specialist-list-title">Available specialists</h2>
+        <span id="specialistCount"></span>
+      </div>
+      <div id="specialistList" class="specialist-grid" aria-live="polite" aria-busy="true">
+        <p class="directory-message">Loading specialists…</p>
+      </div>
+      <p class="rating-disclaimer">Ratings are submitted by BimaKonnect users and are not an endorsement or verification of professional credentials. Confirm a specialist’s qualifications and suitability before sharing personal information or making decisions.</p>
+    </section>
+    <footer class="directory-footer"><a href="/privacy.html">Privacy policy</a></footer>
+  </main>
+  <div id="toastRegion" class="directory-toast-region" role="status" aria-live="polite" aria-relevant="additions"></div>
+  <script src="/directory.js" defer></script>
+</body>
+</html>

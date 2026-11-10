@@ -29,6 +29,13 @@
         <a class="sidebar-link" href="#quiz"><i class="ph ph-compass" aria-hidden="true"></i><span>Explore cover</span></a>
         <a class="sidebar-link" href="#glossary"><i class="ph ph-book-open-text" aria-hidden="true"></i><span>Insurance glossary</span></a>
         <a class="sidebar-link" href="#claims"><i class="ph ph-clipboard-text" aria-hidden="true"></i><span>Claims guide</span></a>
+        <a class="sidebar-link" href="/specialists"><i class="ph ph-users-three" aria-hidden="true"></i><span>Insurance specialists</span></a>
+        {% if user_role == "specialist" %}
+        <a class="sidebar-link" href="/specialist/account"><i class="ph ph-identification-card" aria-hidden="true"></i><span>My specialist profile</span></a>
+        {% endif %}
+        {% if user_role == "admin" %}
+        <a class="sidebar-link" href="/admin/specialists"><i class="ph ph-user-gear" aria-hidden="true"></i><span>Manage specialists</span></a>
+        {% endif %}
       </nav>
       <div class="sidebar-bottom">
         <a class="sidebar-link" href="/privacy.html"><i class="ph ph-lock-key" aria-hidden="true"></i><span>Privacy</span></a>
