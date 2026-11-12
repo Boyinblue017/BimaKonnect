@@ -1,9 +1,9 @@
 import re
-import sqlite3
 
 from flask import Blueprint, current_app, jsonify, render_template, request, session
 
 try:
+    from backend.database import DatabaseIntegrityError
     from backend.services.auth_service import (
         MAX_PASSWORD_LENGTH,
         MIN_PASSWORD_LENGTH,
@@ -20,6 +20,7 @@ try:
         update_specialist_profile,
     )
 except ModuleNotFoundError:
+    from database import DatabaseIntegrityError
     from services.auth_service import (
         MAX_PASSWORD_LENGTH,
         MIN_PASSWORD_LENGTH,
@@ -144,7 +145,7 @@ def add_specialist():
     profile["login_email"] = login_email
     try:
         user_id = create_specialist(_database_path(), profile, password)
-    except sqlite3.IntegrityError:
+    except DatabaseIntegrityError:
         return jsonify({"error": "An account with that sign-in email already exists."}), 409
     return jsonify({"message": "Specialist account created.", "id": user_id}), 201
 

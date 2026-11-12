@@ -19,7 +19,8 @@ app = Flask(
 )
 app.config.update(
     SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
-    DATABASE_PATH=os.environ.get("BIMAKONNECT_DATABASE", DEFAULT_DATABASE_PATH),
+    DATABASE_PATH=os.environ.get("DATABASE_URL")
+    or os.environ.get("BIMAKONNECT_DATABASE", DEFAULT_DATABASE_PATH),
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
     SESSION_COOKIE_SECURE=os.environ.get("COOKIE_SECURE", "").lower() == "true",

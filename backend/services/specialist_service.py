@@ -1,20 +1,26 @@
-import sqlite3
-
 from werkzeug.security import generate_password_hash
 
 try:
+    from backend.database import DatabaseIntegrityError, is_postgres
     from backend.services.auth_service import _connect
 except ModuleNotFoundError:
+    from database import DatabaseIntegrityError, is_postgres
     from services.auth_service import _connect
 
 
-def create_specialist(database_path, profile, temporary_password):
-    with _connect(database_path) as connection:
-        cursor = connection.execute(
-            "INSERT INTO users (email, password_hash, role) VALUES (?, ?, 'specialist')",
-            (profile["login_email"], generate_password_hash(temporary_password)),
-        )
-        user_id = cursor.lastrowid
+def create_specialist(database_target, profile, temporary_password):
+    with _connect(database_target) as connection:
+        if is_postgres(database_target):
+            user_id = connection.execute(
+                "INSERT INTO users (email, password_hash, role) VALUES (?, ?, 'specialist') RETURNING id",
+                (profile["login_email"], generate_password_hash(temporary_password)),
+            ).fetchone()["id"]
+        else:
+            cursor = connection.execute(
+                "INSERT INTO users (email, password_hash, role) VALUES (?, ?, 'specialist')",
+                (profile["login_email"], generate_password_hash(temporary_password)),
+            )
+            user_id = cursor.lastrowid
         connection.execute(
             """
             INSERT INTO specialist_profiles
@@ -82,7 +88,7 @@ def list_specialists(database_path, reviewer_id):
             JOIN users u ON u.id = p.user_id AND u.role = 'specialist'
             LEFT JOIN specialist_ratings r ON r.specialist_id = p.user_id
             GROUP BY p.user_id
-            ORDER BY p.display_name COLLATE NOCASE
+            ORDER BY LOWER(p.display_name)
             """,
             (reviewer_id, reviewer_id),
         ).fetchall()
@@ -109,6 +115,6 @@ def rate_specialist(database_path, specialist_id, reviewer_id, rating):
                 """,
                 (specialist_id, reviewer_id, rating),
             )
-    except sqlite3.IntegrityError:
+    except DatabaseIntegrityError:
         return "invalid_rating"
     return "ok"

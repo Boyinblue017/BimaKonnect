@@ -122,7 +122,8 @@ Support for:
 
 ### Database
 
-* SQLite
+* SQLite for local development
+* PostgreSQL for hosted deployments
 
 ### APIs
 
@@ -171,7 +172,7 @@ The current MVP includes:
 * A transparent needs quiz that explains why each cover is worth exploring.
 * A searchable insurance glossary with everyday examples.
 * A claims guidance wizard with safety-first next steps and tailored document checklists for motor, health, crop, SME, and life cover.
-* Required email/password accounts, with password hashes stored in SQLite and authenticated access to the learning tools.
+* Required email/password accounts, with password hashes stored in SQLite locally or PostgreSQL when hosted.
 * A directory of admin-managed insurance specialists with public contact profiles and one editable 1–5-star rating per signed-in user and specialist.
 * A health endpoint suitable for deployment monitoring.
 
@@ -194,6 +195,7 @@ python -m backend.app
 
 Open [http://localhost:5000](http://localhost:5000). The API health check is available at `/api/health`.
 The app creates its SQLite account database at `backend/instance/bimakonnect.sqlite3` by default. Set `SECRET_KEY` to a stable, private value when running outside local development; set `BIMAKONNECT_DATABASE` to the desired SQLite file path if needed.
+When using PostgreSQL, set `DATABASE_URL` to its connection URL; this takes precedence over `BIMAKONNECT_DATABASE`. The schema is initialized automatically on startup. Existing SQLite accounts, specialists, and ratings are not copied to PostgreSQL.
 To provision the initial administrator, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` before starting the app. Use a unique password of at least 12 characters. If the email already belongs to an account, startup promotes that account to administrator and retains its current password. Administrators can add specialists at `/admin/specialists`; specialists should change the temporary password and maintain their profile at `/specialist/account`.
 
 ## Frontend assets
@@ -204,7 +206,52 @@ Run automated tests from the repository root with `python -m unittest discover -
 
 ## Deployment
 
-The included `render.yaml` deploys the app to Render with `gunicorn backend.app:app`, creates a secret session key, enables secure cookies, and monitors `/api/health`. Configure `ADMIN_EMAIL` and `ADMIN_PASSWORD` as private Render environment variables to provision the first administrator. SQLite data on Render's default filesystem is ephemeral; before accepting real accounts, attach persistent storage and set `BIMAKONNECT_DATABASE` to a database file on that storage. Account verification, regular-user password reset, and account deletion are not yet self-service features.
+### PythonAnywhere free demo
+
+The PythonAnywhere Beginner account is listed at [$0/month](https://www.pythonanywhere.com/pricing/) and supports one web app. Its resource and outbound-internet limits make it suitable for a demo, not production. The app can use SQLite in your home directory; this avoids provisioning Render Postgres.
+
+1. Push the project to a Git provider you can access from PythonAnywhere, then open a Bash console and clone it into your home directory.
+2. Create and activate a virtual environment, then install the requirements:
+
+   ```bash
+   mkvirtualenv --python=/usr/bin/python3.13 bimakonnect-venv
+   workon bimakonnect-venv
+   cd ~/BimaKonnect
+   pip install -r requirements.txt
+   ```
+
+3. In the **Web** tab, add a web app using **Manual configuration** and the same Python version. Set its virtualenv to `bimakonnect-venv`.
+4. Open the WSGI configuration file linked from the Web tab. Before importing the app, add the following, replacing the username and placeholders. Keep these values in PythonAnywhere's WSGI configuration only—never commit them:
+
+   ```python
+   import os
+   import sys
+
+   project_home = "/home/YOUR_USERNAME/BimaKonnect"
+   if project_home not in sys.path:
+       sys.path.insert(0, project_home)
+
+   os.environ.pop("DATABASE_URL", None)
+   os.environ["BIMAKONNECT_DATABASE"] = "/home/YOUR_USERNAME/bimakonnect.sqlite3"
+   os.environ["SECRET_KEY"] = "A_LONG_RANDOM_SECRET"
+   os.environ["COOKIE_SECURE"] = "true"
+   os.environ["ADMIN_EMAIL"] = "your-admin-email@example.com"
+   os.environ["ADMIN_PASSWORD"] = "A_UNIQUE_PASSWORD_OF_AT_LEAST_12_CHARACTERS"
+
+   from backend.app import app as application
+   ```
+
+   Generate the session secret in a console with `python -c "import secrets; print(secrets.token_hex(32))"`. Keep it stable; changing it signs out existing sessions. The database and admin account are initialized when the WSGI file imports the app. If that admin email already exists in the database, startup promotes it but keeps its existing password.
+
+5. Save the WSGI file, reload the web app, and check `/api/health`.
+
+The SQLite file is stored in your home directory, separate from the code checkout. Keep backups of any demo data you want to retain; do not use this free setup for real user data. See PythonAnywhere's [Flask deployment guide](https://help.pythonanywhere.com/pages/Flask/) for host-specific setup details.
+
+### Render alternative
+
+The included `render.yaml` configures Render with `gunicorn backend.app:app`, secure cookies, `/api/health` monitoring, and a free managed PostgreSQL database. Render may require payment information to create a Blueprint. Its free Postgres plan is for testing only: it is limited to 1 GB, expires 30 days after creation, and its data is deleted if it is not upgraded within the following 14-day grace period. It has no backups. For production, use a paid database plan and confirm its current cost in Render. Existing local SQLite accounts, specialists, and ratings are not automatically migrated.
+
+Account verification, regular-user password reset, and account deletion are not yet self-service features.
 
 ## Recommended next milestones
 
